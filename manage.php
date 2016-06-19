@@ -1,6 +1,6 @@
 <?php
 
-require 'employeeCrud.php';
+require_once 'employee.php';
 
 $emp = new Employee();
 $isDeleted = false;
