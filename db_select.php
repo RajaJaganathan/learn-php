@@ -1,6 +1,6 @@
 <?php
 
-require 'database/db.php';
+require_once 'database/db.php';
 
 $db = DBCxn::get();
 

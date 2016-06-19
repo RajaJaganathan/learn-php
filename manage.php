@@ -1,29 +1,29 @@
 <?php
 
-require 'database/db.php';
+require 'employeeCrud.php';
 
+$emp = new Employee();
 $isDeleted = false;
 
 // echo var_dump($_POST);
 
 if(isset($_POST['delete'])){
-	$isDeleted = deleteEmployee();
+	$isDeleted = $emp->deleteEmployee();
 	clearAllFields();	
 }elseif(isset($_POST['create'])){
-	$isInserted = addEmployee();
+	$isInserted = $emp->addEmployee();
 	clearAllFields();	
 }elseif(isset($_POST['update'])){
-	$isUpdated = updateEmployee();	
+	$isUpdated = $emp->updateEmployee();	
 }elseif(isset($_POST['updateRequired'])){
-	$row = fetchByEmployeeId($_POST['id']);
+	$row = $emp->fetchByEmployeeId($_POST['id']);
 	fillForms($row);	
 }else{
 	//Get
 	clearAllFields();
 }
 
-$results = fetchAllEmployee();
-
+$results = $emp->fetchAllEmployee();
 
 function fillForms($row){
 	$_POST['id'] = $row['id'];
@@ -32,61 +32,13 @@ function fillForms($row){
 	$_POST['contact'] = $row['contact_number'];
 	$_POST['position'] = $row['position'];
 }
+
 function clearAllFields(){
 	$_POST['id'] = "";
 	$_POST['name'] = "";
 	$_POST['email'] = "";
 	$_POST['contact'] = "";
 	$_POST['position'] = "";	
-}
-
-function deleteEmployee(){
-	$db = DBCxn::get();
-  $st = $db->prepare("DELETE FROM employees WHERE id=:id");
-	$st->bindParam(":id", $_POST['id']);
-	return $st->execute();
-}
-
-function updateEmployee(){
-	$db = DBCxn::get();	
-  $st = $db->prepare("UPDATE employees SET name=:name, email=:email, contact_number=:contact, position=:position WHERE id=:id");
-	$st->bindParam(":name", $_POST['name']);
-	$st->bindParam(":email", $_POST['email']);
-	$st->bindParam(":contact", $_POST['contact']);
-	$st->bindParam(":position", $_POST['position']);
-	$st->bindParam(":id", $_POST['id'], PDO::PARAM_INT);
-	return $st->execute();
-}
-
-function fetchAllEmployee(){
-	$db = DBCxn::get();
-  $st = $db->query('SELECT * FROM employees');
-  return $st->fetchAll(PDO::FETCH_ASSOC);
-}
-
-function fetchByEmployeeId(){
-	$db = DBCxn::get();
-  $st = $db->prepare("SELECT * FROM employees WHERE id=:id");
-	$st->bindParam(":id", $_POST["id"]);	
-  $st->execute();
-
-	return $st->fetch(PDO::FETCH_ASSOC);
-}
-
-function addEmployee(){
-	try{
-		$db = DBCxn::get();
-		$st = $db->prepare("INSERT INTO employees(name,email,contact_number,position) VALUES (:name, :email, :contact_number, :position)");
-		$st->bindParam(":name",$_POST['name']);
-		$st->bindParam(":email",$_POST['email']);
-		$st->bindParam(":contact_number",$_POST['contact']);
-		$st->bindParam(":position",$_POST['position']);
-		return $st->execute();
-	}
-	catch(PDOException $e){
-		$success = false;
-		throw $e;
-	}	
 }
 
 ?>
