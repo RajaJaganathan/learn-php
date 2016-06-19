@@ -165,7 +165,9 @@ function addEmployee(){
 		<input type="text" class="form-control" id="position" name="position" placeholder="position" value="<?= $_POST['position']?>">
 		<input type="hidden" class="form-control" id="id" name="id" placeholder="id" value="<?= $_POST['id']?>">
 	</div>
-	<button type="submit" name="<?php echo isset($_POST['updateRequired']) || isset($_POST['update'])? "update": "create"?>" class="btn btn-primary">Submit</button>
+	<button type="submit" name="<?php echo isset($_POST['updateRequired']) || isset($_POST['update'])? "update": "create"?>" class="btn btn-primary">
+	<?php echo isset($_POST['updateRequired']) || isset($_POST['update'])? "Update": "Add New"?>
+	</button>
 	<button type="reset" name="reset" class="btn btn-secondary">Reset</button>
 </form>
 </div>
